@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌞 SA Jain Potluck Picnic Sign-Up</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --saffron: #F4A226;
+    --turmeric: #E8891A;
+    --mango: #FFD166;
+    --leaf: #4A7C59;
+    --mint: #7DB992;
+    --cream: #FFF8EE;
+    --warm-white: #FFFDF8;
+    --brown: #5C3D2E;
+    --light-brown: #8B6347;
+    --card-bg: #FFFFFF;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--brown);
+    min-height: 100vh;
+    background-image:
+      radial-gradient(circle at 10% 20%, rgba(244,162,38,0.12) 0%, transparent 40%),
+      radial-gradient(circle at 90% 80%, rgba(74,124,89,0.10) 0%, transparent 40%),
+      radial-gradient(circle at 50% 50%, rgba(255,209,102,0.08) 0%, transparent 60%);
+  }
+
+  .top-band {
+    height: 8px;
+    background: linear-gradient(90deg, var(--leaf) 0%, var(--saffron) 33%, var(--mango) 66%, var(--leaf) 100%);
+  }
+
+  /* Hero */
+  .hero {
+    text-align: center;
+    padding: 44px 24px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 300px;
+    background: radial-gradient(ellipse, rgba(244,162,38,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-emoji { font-size: 2.6rem; display: block; margin-bottom: 10px; animation: float 3s ease-in-out infinite; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.9rem, 5vw, 3rem);
+    font-weight: 900;
+    color: var(--brown);
+    line-height: 1.15;
+    letter-spacing: -0.5px;
+  }
+  .hero h1 span { color: var(--turmeric); }
+
+  /* Intro card */
+  .intro-card {
+    max-width: 680px;
+    margin: 0 auto 8px;
+    background: white;
+    border-radius: 16px;
+    padding: 18px 22px;
+    box-shadow: 0 2px 12px rgba(92,61,46,0.07);
+    border-left: 4px solid var(--saffron);
+    font-size: 0.9rem;
+    color: var(--light-brown);
+    line-height: 1.6;
+  }
+  .intro-card p { margin-bottom: 8px; }
+  .intro-card p:last-child { margin-bottom: 0; }
+  .intro-card strong { color: var(--brown); }
+
+  .headcount {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+  .headcount-pill {
+    background: linear-gradient(135deg, #FFF0C8, #FFE09A);
+    border-radius: 30px;
+    padding: 5px 14px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--brown);
+  }
+
+  /* Main container */
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 20px 16px 60px;
+  }
+
+  /* Section divider */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 28px 0 14px;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--brown);
+    padding: 12px 18px;
+    background: linear-gradient(135deg, #FFF0C8, #FFE09A);
+    border-radius: 12px;
+    border-left: 4px solid var(--saffron);
+  }
+  .section-header .icon { font-size: 1.3rem; }
+
+  /* Item Group Card */
+  .item-group {
+    background: var(--card-bg);
+    border-radius: 16px;
+    margin-bottom: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(92,61,46,0.07), 0 0 0 1px rgba(244,162,38,0.10);
+    transition: box-shadow 0.2s;
+  }
+  .item-group:hover { box-shadow: 0 4px 20px rgba(92,61,46,0.11), 0 0 0 1px rgba(244,162,38,0.18); }
+
+  .item-group-title {
+    padding: 13px 18px 9px;
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--brown);
+    border-bottom: 1px dashed rgba(244,162,38,0.28);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Slot Row */
+  .slot-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-bottom: 1px solid rgba(244,162,38,0.09);
+    transition: background 0.15s;
+  }
+  .slot-row:last-child { border-bottom: none; }
+  .slot-row:hover { background: rgba(255,241,200,0.32); }
+
+  .slot-label {
+    flex: 1;
+    font-size: 0.87rem;
+    font-weight: 500;
+    color: var(--light-brown);
+    line-height: 1.45;
+  }
+  .slot-label .sub {
+    display: block;
+    font-size: 0.75rem;
+    color: #bbb;
+    font-weight: 400;
+    margin-top: 1px;
+  }
+
+  .tag {
+    display: inline-block;
+    font-size: 0.68rem;
+    padding: 2px 7px;
+    border-radius: 20px;
+    font-weight: 600;
+    margin-left: 5px;
+    vertical-align: middle;
+    letter-spacing: 0.3px;
+  }
+  .tag.jain    { background: #E6F4EA; color: #2E7D32; }
+  .tag.regular { background: #FFF3E0; color: #E65100; }
+  .tag.pb      { background: #F3E5F5; color: #6A1B9A; }
+  .tag.kids    { background: #E3F2FD; color: #1565C0; }
+
+  /* Buttons */
+  .signup-btn {
+    background: var(--saffron);
+    color: white;
+    border: none;
+    padding: 7px 15px;
+    border-radius: 30px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.81rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .signup-btn:hover { background: var(--turmeric); transform: scale(1.05); }
+  .signup-btn:active { transform: scale(0.97); }
+  .signup-btn.taken { background: #d4d4d4; color: #888; cursor: default; }
+  .signup-btn.taken:hover { background: #d4d4d4; transform: none; }
+
+  .signed-name {
+    font-size: 0.82rem;
+    color: var(--leaf);
+    font-weight: 600;
+    max-width: 130px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .unsign-btn {
+    background: transparent;
+    border: 1.5px solid rgba(220,80,80,0.3);
+    color: #c0392b;
+    width: 27px; height: 27px;
+    border-radius: 50%;
+    font-size: 0.72rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s, border-color 0.15s, transform 0.15s;
+    line-height: 1;
+  }
+  .unsign-btn:hover { background: rgba(220,80,80,0.1); border-color: #c0392b; transform: scale(1.1); }
+
+  /* Sign-up Modal */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(92,61,46,0.45);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--warm-white);
+    border-radius: 22px;
+    padding: 30px 26px;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(92,61,46,0.25);
+    animation: popIn 0.25s cubic-bezier(.34,1.56,.64,1) forwards;
+  }
+  @keyframes popIn { from{transform:scale(0.85);opacity:0} to{transform:scale(1);opacity:1} }
+
+  .modal h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    color: var(--brown);
+    margin-bottom: 6px;
+  }
+  .modal-item-label {
+    font-size: 0.86rem;
+    color: var(--light-brown);
+    margin-bottom: 20px;
+    padding: 8px 12px;
+    background: #FFF3D6;
+    border-radius: 8px;
+    line-height: 1.4;
+  }
+  .modal label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--brown);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .modal input {
+    width: 100%;
+    padding: 11px 14px;
+    border: 2px solid rgba(244,162,38,0.3);
+    border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    color: var(--brown);
+    background: white;
+    outline: none;
+    transition: border-color 0.2s;
+    margin-bottom: 18px;
+  }
+  .modal input:focus { border-color: var(--saffron); }
+
+  .modal-actions { display: flex; gap: 10px; }
+  .btn-confirm {
+    flex: 1;
+    background: linear-gradient(135deg, var(--saffron), var(--turmeric));
+    color: white;
+    border: none;
+    padding: 13px;
+    border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.93rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+  .btn-confirm:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn-cancel {
+    padding: 13px 18px;
+    background: transparent;
+    border: 2px solid rgba(244,162,38,0.3);
+    border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.93rem;
+    color: var(--light-brown);
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-cancel:hover { background: rgba(244,162,38,0.08); }
+
+  /* Cancel/Unsign confirm modal */
+  .cancel-modal {
+    background: var(--warm-white);
+    border-radius: 22px;
+    padding: 28px 24px;
+    max-width: 360px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(92,61,46,0.25);
+    animation: popIn 0.25s cubic-bezier(.34,1.56,.64,1) forwards;
+    text-align: center;
+  }
+  .cancel-modal .cancel-icon { font-size: 2.2rem; margin-bottom: 10px; }
+  .cancel-modal h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    color: var(--brown);
+    margin-bottom: 8px;
+  }
+  .cancel-modal p {
+    font-size: 0.86rem;
+    color: var(--light-brown);
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+  .cancel-modal p strong { color: var(--brown); }
+  .cancel-actions { display: flex; gap: 10px; }
+  .btn-remove {
+    flex: 1;
+    background: #c0392b;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .btn-remove:hover { opacity: 0.88; }
+  .btn-keep {
+    flex: 1;
+    background: transparent;
+    border: 2px solid rgba(244,162,38,0.35);
+    border-radius: 12px;
+    padding: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    color: var(--light-brown);
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-keep:hover { background: rgba(244,162,38,0.08); }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 28px; left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--leaf);
+    color: white;
+    padding: 12px 22px;
+    border-radius: 40px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    box-shadow: 0 8px 24px rgba(74,124,89,0.3);
+    z-index: 200;
+    transition: transform 0.4s cubic-bezier(.34,1.56,.64,1);
+    pointer-events: none;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 16px;
+    font-size: 0.78rem;
+    color: var(--light-brown);
+    opacity: 0.65;
+  }
+
+  @media (max-width: 480px) {
+    .slot-row { flex-wrap: wrap; gap: 6px; }
+    .signed-name { max-width: 100px; }
+    .modal { padding: 22px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-band"></div>
+
+<div class="hero">
+  <span class="hero-emoji">🌞🍽️</span>
+  <h1>SA Jain Potluck Picnic<br><span>Sign-Up</span></h1>
+</div>
+
+<div class="container" style="padding-top:0">
+  <div class="intro-card">
+    <p>Hi everyone! 😊 Let's make this picnic extra <strong>fun, delicious, and stress-free</strong> for everyone! To keep things balanced, please choose <strong>ONE item</strong> from the list below so no family has too much workload.</p>
+    <div class="headcount">
+      <span class="headcount-pill">👩‍👨 50 Adults</span>
+      <span class="headcount-pill">🧒 11 Kids</span>
+      <span class="headcount-pill">🍽️ 61 Total</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- MENU HEADER -->
+  <div class="section-header">
+    <span class="icon">🍽️</span>
+    Menu
+  </div>
+
+  <!-- Bhel -->
+  <div class="item-group">
+    <div class="item-group-title"><span>🥣</span> Bhel</div>
+    <div class="slot-row" data-slot="bhel-jain">
+      <div class="slot-label">30 ppl serving <span class="tag jain">Jain</span></div>
+      <button class="signup-btn" onclick="openSignupModal(this, 'Bhel – Jain (30 ppl)')">Sign Up</button>
+    </div>
+    <div class="slot-row" data-slot="bhel-reg">
+      <div class="slot-label">30 ppl serving <span class="tag regular">Regular</span></div>
+      <button class="signup-btn" onclick="openSignupModal(this, 'Bhel – Regular (30 ppl)')">Sign Up</button>
+    </div>
+  </div>
+
+  <!-- Sandwiches -->
+  <div class="item-group">
+    <div class="item-group-title"><span>🥪</span> Sandwiches</div>
+    <div class="slot-row" data-slot="sand-jain">
+      <div class="slot-label">25 pcs <span class="tag jain">Jain</span><span class="sub">Cut in half → 50 pieces</span></div>
+      <button class="signup-btn" onclick="openSignupModal(this, 'Sandwiches – Jain (25 pcs, cut in half = 50 pieces)')">Sign Up</button>
+    </div>
+    <div class="slot-row" data-slot="sand-reg">
+      <div class="slot-label">25 pcs <span class="tag regular">Regular</span><span class="sub">Cut in half → 50 pieces</span></div>
+      <button class="signup-btn" onclick="openSignupModal(this, 'Sandwiches – Regular (25 pcs, cut in half = 50 pieces)')">Sign Up</button>
+    </div>
+    <div class="slot-row" data-slot="sand-pb">
+      <div class="slot-label">Peanut Butter &amp; Jelly – 25 pcs <span class="tag pb">PB&amp;J</span><span class="sub">Cut in half → 50 pieces</span></div>
+      <button class="signup-btn" onclick="openSignupModal(this, 'Sandwiches – PB&J (25 pcs, cut in half = 50 pieces)')">Sign Up</button>
+    </div>
+  </div>
+
+  <!-- Samosa -->
+  <div class="item-group">
+    <div class="item-group-title"><span>🔺</span> Samosa <small style="font-weight:400;font-size:0.8rem;color:#bbb">(Regular size)</small></div>
+    <div class="slot-row" data-slot="sam-red">
+      <div class="slot-label">25 pcs + Red Chutney</div>
+      <button class="signup-btn" onclick="openSignupModal(this, 'Samosa – 25 pcs + Red Chutney')">Sign Up</button>
+    </div>
+    <div class="slot-row" data-slot="sam-green">
+      <div class="slot-label">25 pcs + Green Chutney</div>
+      <button class="signup-btn" onclick="openSignupModal(this, 'Samosa – 25 pcs + Green Chutney')">Sign Up</button>
+    </div>
+    <div class="slot-row" data-slot="sam-jain">
+      <div class="slot-label">25 pcs + Jain Chutney <span class="tag jain">Jain</span><span class="sub">Green or Red</span></div>
+      <button class="signup-btn" onclick="openSignupModal(this, 'Samosa – 25 pcs + Jain Chutney')">Sign Up</button>
+    </div>
+  </div>
+
+  <!-- Khaman -->
+  <div class="item-group">
+    <div class="item-group-title"><span>🟡</span> Khaman</div>
+    <div class="slot-row" data-slot="kha-1">
+      <div class="slot-label">30 pcs + Chutney</div>
+      <button class="signup-btn" onclick="openSignupModal(this, 'Khaman – 30 pcs + Chutney (slot 1)')">Sign Up</button>
+    </div>
+    <div class="slot-row" data-slot="kha-2">
+      <div class="slot-label">30 pcs + Chutney</div>
+      <button class="signup-btn" onclick="openSignupModal(this, 'Khaman – 30 pcs + Chutney (slot 2)')">Sign Up</button>
+    </div>
+    <div class="slot-row" data-slot="kha-jain">
+      <div class="slot-label">30 pcs + Jain Chutney <span class="tag jain">Jain</span></div>
+      <button class="signup-btn" onclick="openSignupModal(this, 'Khaman – 30 pcs + Jain Chutney')">Sign Up</button>
+    </div>
+  </div>
+
+  <!-- Veg / Tawa Pulav -->
+  <div class="item-group">
+    <div class="item-group-title"><span>🍛</span> Veg / Tawa Pulav</div>
+    <div class="slot-row" data-slot="pulav-jain">
+      <div class="slot-label">6 qt <span class="tag jain">Jain</span> <span class="tag kids">Kids-friendly</span><span class="sub">Less spicy</span></div>
+      <button class="signup-btn" onclick="openSignupModal(this, 'Veg/Tawa Pulav – 6 qt, Jain, less spicy for kids')">Sign Up</button>
+    </div>
+    <div class="slot-row" data-slot="pulav-reg-1">
+      <div class="slot-label">6 qt <span class="tag regular">Regular</span></div>
+      <button class="signup-btn" onclick="openSignupModal(this, 'Veg/Tawa Pulav – 6 qt (slot 1)')">Sign Up</button>
+    </div>
+    <div class="slot-row" data-slot="pulav-reg-2">
+      <div class="slot-label">6 qt <span class="tag regular">Regular</span></div>
+      <button class="signup-btn" onclick="openSignupModal(this, 'Veg/Tawa Pulav – 6 qt (slot 2)')">Sign Up</button>
+    </div>
+  </div>
+
+  <!-- Cucumber Raita -->
+  <div class="item-group">
+    <div class="item-group-title"><span>🥛</span> Cucumber Raita</div>
+    <div class="slot-row" data-slot="raita-jain">
+      <div class="slot-label">6 qt <span class="tag jain">Jain</span></div>
+      <button class="signup-btn" onclick="openSignupModal(this, 'Cucumber Raita – 6 qt, Jain')">Sign Up</button>
+    </div>
+  </div>
+
+  <!-- Eggless Brownies -->
+  <div class="item-group">
+    <div class="item-group-title"><span>🍫</span> Eggless Brownies</div>
+    <div class="slot-row" data-slot="brownie-1">
+      <div class="slot-label">45 pcs</div>
+      <button class="signup-btn" onclick="openSignupModal(this, 'Eggless Brownies – 45 pcs (slot 1)')">Sign Up</button>
+    </div>
+    <div class="slot-row" data-slot="brownie-2">
+      <div class="slot-label">45 pcs</div>
+      <button class="signup-btn" onclick="openSignupModal(this, 'Eggless Brownies – 45 pcs (slot 2)')">Sign Up</button>
+    </div>
+  </div>
+
+  <!-- Fruits -->
+  <div class="item-group">
+    <div class="item-group-title"><span>🍉</span> Fruits</div>
+    <div class="slot-row" data-slot="fruit-1">
+      <div class="slot-label">Watermelon (cut in pieces) + Oranges</div>
+      <button class="signup-btn" onclick="openSignupModal(this, 'Watermelon (cut) + Oranges (slot 1)')">Sign Up</button>
+    </div>
+    <div class="slot-row" data-slot="fruit-2">
+      <div class="slot-label">Watermelon (cut in pieces) + Oranges</div>
+      <button class="signup-btn" onclick="openSignupModal(this, 'Watermelon (cut) + Oranges (slot 2)')">Sign Up</button>
+    </div>
+  </div>
+
+  <!-- Drinks -->
+  <div class="item-group">
+    <div class="item-group-title"><span>💧</span> Drinks</div>
+    <div class="slot-row" data-slot="drinks-1">
+      <div class="slot-label">1 crate (80 small water bottles) + 24 mini soda cans</div>
+      <button class="signup-btn" onclick="openSignupModal(this, 'Drinks – 1 crate (80 water bottles) + 24 mini soda cans (slot 1)')">Sign Up</button>
+    </div>
+    <div class="slot-row" data-slot="drinks-2">
+      <div class="slot-label">1 crate (80 small water bottles) + 24 mini soda cans</div>
+      <button class="signup-btn" onclick="openSignupModal(this, 'Drinks – 1 crate (80 water bottles) + 24 mini soda cans (slot 2)')">Sign Up</button>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:28px;font-size:0.88rem;color:var(--light-brown);line-height:1.7;">
+    Thank you everyone for joining and contributing! ❤️<br>
+    Looking forward to a day filled with great food, sunshine, fun, and unforgettable memories! ☀️🧺💛
+  </div>
+
+</div>
+
+<!-- Sign-Up Modal -->
+<div class="modal-overlay" id="signup-modal">
+  <div class="modal">
+    <h3>Sign Up 🙌</h3>
+    <div class="modal-item-label" id="modal-item-label">Item</div>
+    <label for="name-input">Your Name</label>
+    <input type="text" id="name-input" placeholder="e.g. Priya Shah" autocomplete="off" maxlength="40" />
+    <div class="modal-actions">
+      <button class="btn-confirm" onclick="confirmSignup()">Confirm ✓</button>
+      <button class="btn-cancel" onclick="closeSignupModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Cancel/Unsign Confirm Modal -->
+<div class="modal-overlay" id="cancel-modal">
+  <div class="cancel-modal">
+    <div class="cancel-icon">🤔</div>
+    <h3>Cancel sign-up?</h3>
+    <p>Remove <strong id="cancel-name-display"></strong> from<br><strong id="cancel-item-display"></strong>?</p>
+    <div class="cancel-actions">
+      <button class="btn-remove" onclick="confirmUnsignup()">Yes, remove</button>
+      <button class="btn-keep" onclick="closeCancelModal()">Keep it</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<div class="footer">Potluck Picnic Sign-Up &nbsp;•&nbsp; Bring the joy 🌞</div>
+
+<script>
+  // ── IMPORTANT: Paste your Apps Script Web App URL here after deploying ──
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzpPrtjLbihgNM2aaW5iNWoYYgP1TC1lxxXGHuSXlvfCU1DFy3cwU6nMy2uyfBJZthC/exec';
+
+  const SLOT_LABELS = {
+    'bhel-jain':    'Bhel – Jain (30 ppl)',
+    'bhel-reg':     'Bhel – Regular (30 ppl)',
+    'sand-jain':    'Sandwiches – Jain (25 pcs)',
+    'sand-reg':     'Sandwiches – Regular (25 pcs)',
+    'sand-pb':      'Sandwiches – PB&J (25 pcs)',
+    'sam-red':      'Samosa – 25 pcs + Red Chutney',
+    'sam-green':    'Samosa – 25 pcs + Green Chutney',
+    'sam-jain':     'Samosa – 25 pcs + Jain Chutney',
+    'kha-1':        'Khaman – 30 pcs + Chutney (slot 1)',
+    'kha-2':        'Khaman – 30 pcs + Chutney (slot 2)',
+    'kha-jain':     'Khaman – 30 pcs + Jain Chutney',
+    'pulav-jain':   'Veg/Tawa Pulav – 6 qt, Jain, less spicy',
+    'pulav-reg-1':  'Veg/Tawa Pulav – 6 qt (slot 1)',
+    'pulav-reg-2':  'Veg/Tawa Pulav – 6 qt (slot 2)',
+    'raita-jain':   'Cucumber Raita – 6 qt, Jain',
+    'brownie-1':    'Eggless Brownies – 45 pcs (slot 1)',
+    'brownie-2':    'Eggless Brownies – 45 pcs (slot 2)',
+    'fruit-1':      'Watermelon (cut) + Oranges (slot 1)',
+    'fruit-2':      'Watermelon (cut) + Oranges (slot 2)',
+    'drinks-1':     'Drinks – 1 crate water + 24 mini soda cans (slot 1)',
+    'drinks-2':     'Drinks – 1 crate water + 24 mini soda cans (slot 2)',
+  };
+
+  // In-memory sign-ups (loaded fresh from sheet on page load)
+  let signups = {};
+
+  let activeBtn = null;
+  let activeSlot = null;
+  let activeLabel = null;
+  let cancelSlot = null;
+  let cancelRow = null;
+
+  // ── Load sign-ups from Google Sheet on page open ──────────────────────────
+  async function loadSignups() {
+    showBanner('Loading sign-ups…', '#888');
+    try {
+      const res = await fetch(SCRIPT_URL);
+      const data = await res.json();
+      if (data.success) {
+        signups = data.signups || {};
+        renderSignups();
+        hideBanner();
+      } else {
+        showBanner('Could not load sign-ups. Please refresh.', '#c0392b');
+      }
+    } catch (e) {
+      showBanner('Could not load sign-ups. Please refresh.', '#c0392b');
+    }
+  }
+
+  function renderSignups() {
+    // Clear any existing markings first
+    document.querySelectorAll('.slot-row').forEach(row => {
+      row.querySelector('.signed-name')?.remove();
+      row.querySelector('.unsign-btn')?.remove();
+      const btn = row.querySelector('.signup-btn');
+      if (btn) { btn.textContent = 'Sign Up'; btn.classList.remove('taken'); }
+    });
+    // Re-apply from sheet data
+    for (const [slot, name] of Object.entries(signups)) {
+      const row = document.querySelector(`[data-slot="${slot}"]`);
+      if (row) markTaken(row, name);
+    }
+  }
+
+  // ── Sync action to Google Sheet ───────────────────────────────────────────
+  async function syncToSheet(slot, name, action) {
+    const item = SLOT_LABELS[slot] || slot;
+    try {
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action, slot, name, item }),
+      });
+    } catch (e) { console.warn('Sync failed:', e); }
+  }
+
+  // ── Loading banner ────────────────────────────────────────────────────────
+  function showBanner(msg, color) {
+    let b = document.getElementById('load-banner');
+    if (!b) {
+      b = document.createElement('div');
+      b.id = 'load-banner';
+      b.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:300;text-align:center;padding:10px;font-size:0.85rem;font-weight:600;color:white;transition:background 0.3s';
+      document.body.prepend(b);
+    }
+    b.textContent = msg;
+    b.style.background = color;
+    b.style.display = 'block';
+  }
+  function hideBanner() {
+    const b = document.getElementById('load-banner');
+    if (b) b.style.display = 'none';
+  }
+
+  // ── Sign-up modal ─────────────────────────────────────────────────────────
+  function openSignupModal(btn, label) {
+    if (btn.classList.contains('taken')) return;
+    activeBtn = btn;
+    activeSlot = btn.closest('[data-slot]').dataset.slot;
+    activeLabel = label;
+    document.getElementById('modal-item-label').textContent = label;
+    document.getElementById('name-input').value = '';
+    document.getElementById('name-input').style.borderColor = '';
+    document.getElementById('signup-modal').classList.add('open');
+    setTimeout(() => document.getElementById('name-input').focus(), 100);
+  }
+
+  function closeSignupModal() {
+    document.getElementById('signup-modal').classList.remove('open');
+    activeBtn = null; activeSlot = null; activeLabel = null;
+  }
+
+  async function confirmSignup() {
+    const name = document.getElementById('name-input').value.trim();
+    if (!name) {
+      document.getElementById('name-input').style.borderColor = '#e53935';
+      setTimeout(() => document.getElementById('name-input').style.borderColor = '', 1400);
+      return;
+    }
+    const slot = activeSlot;
+    const row = activeBtn.closest('[data-slot]');
+    signups[slot] = name;
+    markTaken(row, name);
+    closeSignupModal();
+    showToast(`${name} signed up! 🎉`);
+    await syncToSheet(slot, name, 'signup');
+  }
+
+  // ── Mark slot taken ───────────────────────────────────────────────────────
+  function markTaken(row, name) {
+    const btn = row.querySelector('.signup-btn');
+    btn.textContent = '✓ Taken';
+    btn.classList.add('taken');
+
+    const nameEl = document.createElement('span');
+    nameEl.className = 'signed-name';
+    nameEl.textContent = name;
+    row.insertBefore(nameEl, btn);
+
+    const unsignBtn = document.createElement('button');
+    unsignBtn.className = 'unsign-btn';
+    unsignBtn.title = 'Cancel sign-up';
+    unsignBtn.textContent = '✕';
+    unsignBtn.onclick = () => openCancelModal(row);
+    row.appendChild(unsignBtn);
+  }
+
+  // ── Cancel modal ──────────────────────────────────────────────────────────
+  function openCancelModal(row) {
+    cancelSlot = row.dataset.slot;
+    cancelRow = row;
+    const name = signups[cancelSlot] || '';
+    const label = SLOT_LABELS[cancelSlot] || cancelSlot;
+    document.getElementById('cancel-name-display').textContent = name;
+    document.getElementById('cancel-item-display').textContent = label;
+    document.getElementById('cancel-modal').classList.add('open');
+  }
+
+  function closeCancelModal() {
+    document.getElementById('cancel-modal').classList.remove('open');
+    cancelSlot = null; cancelRow = null;
+  }
+
+  async function confirmUnsignup() {
+    const slot = cancelSlot;
+    const row = cancelRow;
+    delete signups[slot];
+
+    row.querySelector('.signed-name')?.remove();
+    row.querySelector('.unsign-btn')?.remove();
+    const btn = row.querySelector('.signup-btn');
+    btn.textContent = 'Sign Up';
+    btn.classList.remove('taken');
+
+    closeCancelModal();
+    showToast('Sign-up cancelled');
+    await syncToSheet(slot, '', 'cancel');
+  }
+
+  // ── Toast ─────────────────────────────────────────────────────────────────
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  // Backdrop clicks
+  document.getElementById('signup-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeSignupModal();
+  });
+  document.getElementById('cancel-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeCancelModal();
+  });
+
+  // Enter key
+  document.getElementById('name-input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') confirmSignup();
+  });
+
+  // Load on page open
+  loadSignups();
+</script>
+</body>
+</html>
