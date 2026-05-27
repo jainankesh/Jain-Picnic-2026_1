@@ -418,7 +418,7 @@
 
 <div class="hero">
   <span class="hero-emoji">🌞🍽️</span>
-  <h1>Potluck Picnic<br><span>Sign-Up</span></h1>
+  <h1>SA Jain Potluck Picnic<br><span>Sign-Up</span></h1>
 </div>
 
 <div class="container" style="padding-top:0">
@@ -609,7 +609,8 @@
 <div class="footer">Potluck Picnic Sign-Up &nbsp;•&nbsp; Bring the joy 🌞</div>
 
 <script>
-  const SHEET_ID = '1CxfgfvsaiqG--TZT2J2MJxdnfsZQkh1GlARbD7DgVYQ';
+  // ── IMPORTANT: Paste your Apps Script Web App URL here after deploying ──
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzpPrtjLbihgNM2aaW5iNWoYYgP1TC1lxxXGHuSXlvfCU1DFy3cwU6nMy2uyfBJZthC/exec';
 
   const SLOT_LABELS = {
     'bhel-jain':    'Bhel – Jain (30 ppl)',
@@ -635,42 +636,75 @@
     'drinks-2':     'Drinks – 1 crate water + 24 mini soda cans (slot 2)',
   };
 
-  const signups = JSON.parse(localStorage.getItem('potluck-signups-v2') || '{}');
+  // In-memory sign-ups (loaded fresh from sheet on page load)
+  let signups = {};
 
-  // Active state for modals
   let activeBtn = null;
   let activeSlot = null;
   let activeLabel = null;
   let cancelSlot = null;
   let cancelRow = null;
 
-  // ── Google Sheets sync ────────────────────────────────────────────────────
-  async function syncToSheet(slot, name, action) {
-    const label = SLOT_LABELS[slot] || slot;
-    const timestamp = new Date().toLocaleString();
-    const prompt = action === 'signup'
-      ? `Use the Google Sheets tool to update spreadsheet ID "${SHEET_ID}". Read sheet "Sheet1". If row 1 is empty, first write headers: A1=Slot ID, B1=Name, C1=Item, D1=Timestamp, E1=Status. Then find if a row where column A equals "${slot}" already exists. If yes, update columns B="${name}", D="${timestamp}", E="Signed Up". If not, append a new row: A="${slot}", B="${name}", C="${label}", D="${timestamp}", E="Signed Up".`
-      : `Use the Google Sheets tool to update spreadsheet ID "${SHEET_ID}". Read sheet "Sheet1". Find the row where column A equals "${slot}". Update it: B="", D="${timestamp}", E="Cancelled". If not found, do nothing.`;
+  // ── Load sign-ups from Google Sheet on page open ──────────────────────────
+  async function loadSignups() {
+    showBanner('Loading sign-ups…', '#888');
     try {
-      await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          mcp_servers: [{ type: 'url', url: 'https://drivemcp.googleapis.com/mcp/v1', name: 'google-drive' }],
-          messages: [{ role: 'user', content: prompt }]
-        })
-      });
-    } catch (e) { console.warn('Sheet sync failed:', e); }
+      const res = await fetch(SCRIPT_URL);
+      const data = await res.json();
+      if (data.success) {
+        signups = data.signups || {};
+        renderSignups();
+        hideBanner();
+      } else {
+        showBanner('Could not load sign-ups. Please refresh.', '#c0392b');
+      }
+    } catch (e) {
+      showBanner('Could not load sign-ups. Please refresh.', '#c0392b');
+    }
   }
 
-  // ── Init ──────────────────────────────────────────────────────────────────
-  function init() {
+  function renderSignups() {
+    // Clear any existing markings first
+    document.querySelectorAll('.slot-row').forEach(row => {
+      row.querySelector('.signed-name')?.remove();
+      row.querySelector('.unsign-btn')?.remove();
+      const btn = row.querySelector('.signup-btn');
+      if (btn) { btn.textContent = 'Sign Up'; btn.classList.remove('taken'); }
+    });
+    // Re-apply from sheet data
     for (const [slot, name] of Object.entries(signups)) {
       const row = document.querySelector(`[data-slot="${slot}"]`);
       if (row) markTaken(row, name);
     }
+  }
+
+  // ── Sync action to Google Sheet ───────────────────────────────────────────
+  async function syncToSheet(slot, name, action) {
+    const item = SLOT_LABELS[slot] || slot;
+    try {
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action, slot, name, item }),
+      });
+    } catch (e) { console.warn('Sync failed:', e); }
+  }
+
+  // ── Loading banner ────────────────────────────────────────────────────────
+  function showBanner(msg, color) {
+    let b = document.getElementById('load-banner');
+    if (!b) {
+      b = document.createElement('div');
+      b.id = 'load-banner';
+      b.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:300;text-align:center;padding:10px;font-size:0.85rem;font-weight:600;color:white;transition:background 0.3s';
+      document.body.prepend(b);
+    }
+    b.textContent = msg;
+    b.style.background = color;
+    b.style.display = 'block';
+  }
+  function hideBanner() {
+    const b = document.getElementById('load-banner');
+    if (b) b.style.display = 'none';
   }
 
   // ── Sign-up modal ─────────────────────────────────────────────────────────
@@ -691,7 +725,7 @@
     activeBtn = null; activeSlot = null; activeLabel = null;
   }
 
-  function confirmSignup() {
+  async function confirmSignup() {
     const name = document.getElementById('name-input').value.trim();
     if (!name) {
       document.getElementById('name-input').style.borderColor = '#e53935';
@@ -699,13 +733,12 @@
       return;
     }
     const slot = activeSlot;
-    signups[slot] = name;
-    localStorage.setItem('potluck-signups-v2', JSON.stringify(signups));
     const row = activeBtn.closest('[data-slot]');
+    signups[slot] = name;
     markTaken(row, name);
     closeSignupModal();
     showToast(`${name} signed up! 🎉`);
-    syncToSheet(slot, name, 'signup');
+    await syncToSheet(slot, name, 'signup');
   }
 
   // ── Mark slot taken ───────────────────────────────────────────────────────
@@ -727,7 +760,7 @@
     row.appendChild(unsignBtn);
   }
 
-  // ── Cancel/Unsign modal ───────────────────────────────────────────────────
+  // ── Cancel modal ──────────────────────────────────────────────────────────
   function openCancelModal(row) {
     cancelSlot = row.dataset.slot;
     cancelRow = row;
@@ -743,11 +776,10 @@
     cancelSlot = null; cancelRow = null;
   }
 
-  function confirmUnsignup() {
+  async function confirmUnsignup() {
     const slot = cancelSlot;
     const row = cancelRow;
     delete signups[slot];
-    localStorage.setItem('potluck-signups-v2', JSON.stringify(signups));
 
     row.querySelector('.signed-name')?.remove();
     row.querySelector('.unsign-btn')?.remove();
@@ -757,7 +789,7 @@
 
     closeCancelModal();
     showToast('Sign-up cancelled');
-    syncToSheet(slot, '', 'unsignup');
+    await syncToSheet(slot, '', 'cancel');
   }
 
   // ── Toast ─────────────────────────────────────────────────────────────────
@@ -768,7 +800,7 @@
     setTimeout(() => t.classList.remove('show'), 2800);
   }
 
-  // Close modals on backdrop click
+  // Backdrop clicks
   document.getElementById('signup-modal').addEventListener('click', function(e) {
     if (e.target === this) closeSignupModal();
   });
@@ -776,12 +808,13 @@
     if (e.target === this) closeCancelModal();
   });
 
-  // Enter key on name input
+  // Enter key
   document.getElementById('name-input').addEventListener('keydown', function(e) {
     if (e.key === 'Enter') confirmSignup();
   });
 
-  init();
+  // Load on page open
+  loadSignups();
 </script>
 </body>
 </html>
